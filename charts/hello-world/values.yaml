@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: lrplateng/demo-service:v1.0.0
+  repository: launchrack/demo-service:v1.0.0
   pullPolicy: Always
 
 imagePullSecrets:
