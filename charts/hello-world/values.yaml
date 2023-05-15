@@ -2,7 +2,7 @@ namespace: hello-world
 replicaCount: 2
 
 image:
-  repository: launchrack/demo-service:1.1
+  repository: launchrack/demo-service:1.2
   pullPolicy: Always
 
 imagePullSecrets:
