@@ -16,7 +16,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, "Hello, World! <3. This is v1.2 of the app and is hosted on kubernetes")
+		return c.HTML(http.StatusOK, "Hello, World! <3. This is v1.3 of the app and is hosted on kubernetes")
 	})
 
 	e.GET("/health", func(c echo.Context) error {
