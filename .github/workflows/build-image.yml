@@ -15,12 +15,13 @@ jobs:
       LANG_TYPE: GOOGLE_GO_VERSION
       LANG_VERSION: 1.19
     steps:
-      - uses: FranzDiebold/github-env-vars-action@v2
+      # - uses: FranzDiebold/github-env-vars-action@v2
       - name: Print environment variables exposed by this action
-        run: |
-          echo "CI_REPOSITORY_NAME=$CI_REPOSITORY_NAME" >> $GITHUB_OUTPUT
-          echo "CI_SHA_SHORT=$CI_SHA_SHORT" >> $GITHUB_OUTPUT
-        id: expose_env_vars
+        uses: FranzDiebold/github-env-vars-action@v2
+        # run: |
+        #   echo "CI_REPOSITORY_NAME=$CI_REPOSITORY_NAME" >> $GITHUB_OUTPUT
+        #   echo "CI_SHA_SHORT=$CI_SHA_SHORT" >> $GITHUB_OUTPUT
+        # id: expose_env_vars
       - name: Extract branch name
         shell: bash
         run: |
@@ -32,4 +33,5 @@ jobs:
           webhook_type: 'json-extended'
           webhook_url: ${{ secrets.WEBHOOK_URL }}
           webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
-          data: '{ "service_name": "${{ steps.expose_env_vars.outputs.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${GITHUB_REPOSITORY}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ steps.expose_env_vars.outputs.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${GITHUB_ACTOR}" }'
+          # data: '{ "service_name": "${{ steps.expose_env_vars.outputs.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${GITHUB_REPOSITORY}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ steps.expose_env_vars.outputs.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${GITHUB_ACTOR}" }'
+          data: '{ "service_name": "${{ env.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${{ github.repository }}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ env.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${{ github.actor }}" }'
