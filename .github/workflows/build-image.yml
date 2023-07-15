@@ -1,0 +1,41 @@
+name: Build image
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    name: Build image webook
+    runs-on: ubuntu-latest
+    env:
+      ROLE_ARN: arn:aws:iam::785631607479:role/planeo_role
+      REGION: us-east-1
+      LANG_TYPE: GOOGLE_GO_VERSION
+      LANG_VERSION: 1.19
+    steps:
+      - name: Print environment variables exposed by this action
+        uses: FranzDiebold/github-env-vars-action@v2
+      - name: Extract branch name
+        shell: bash
+        run: |
+          echo "GITHUB_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      # - name: Invoke deployment hook
+      #   uses: distributhor/workflow-webhook@v3
+      #   env:
+      #     webhook_type: 'json-extended'
+      #     webhook_url: ${{ secrets.WEBHOOK_URL }}
+      #     webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+      #     data: '{ "service_name": "${{ env.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${{ github.repository }}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ env.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${{ github.actor }}" }'
+      - name: Send webhook request 
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${{ secrets.AWS_API_KEY }}" \
+            -d '{ "service_name": "${{ env.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${{ github.repository }}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ env.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${{ github.actor }}" }' \
+            ${{ secrets.WEBHOOK_URL }}
