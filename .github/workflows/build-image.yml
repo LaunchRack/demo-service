@@ -36,6 +36,6 @@ jobs:
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            -H "Authorization: ${{ secrets.AWS_API_KEY }}" \
+            -H "Authorization: ${{ secrets.WEBHOOK_SECRET }}" \
             -d '{ "service_name": "${{ env.CI_REPOSITORY_NAME }}", "git_repo": "https://github.com/${{ github.repository }}", "git_branch": "${{ steps.extract_branch.outputs.GITHUB_BRANCH }}", "image_tag": "${{ env.CI_SHA_SHORT }}", "region": "${{env.REGION}}", "role_arn": "${{env.ROLE_ARN}}", "lang_type": "${{env.LANG_TYPE}}", "lang_version": "${{env.LANG_VERSION}}", "user_id": "${{ github.actor }}" }' \
             ${{ secrets.WEBHOOK_URL }}
