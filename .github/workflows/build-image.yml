@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        uses: planeodev/build-image-action@v0.1.0
+        with:
+          ROLE_ARN: arn:aws:iam::785631607479:role/planeo_role
+          REGION: us-east-1
+          LANG_TYPE: GOOGLE_GO_VERSION
+          LANG_VERSION: 1.19
+          SERVICE_NAME: demo-service
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
